@@ -66,7 +66,10 @@ def parse_marc_text(text):
 
             elif line.startswith("245"):
                 sub = extract_subfields(line)
-                record["Title"] = clean_text(sub.get("a", ""))
+                if "b" in sub:
+                    record["Title"] = clean_text(sub.get("a", "")) + " : " + clean_text(sub.get("b", ""))
+                else:
+                    record["Title"] = clean_text(sub.get("a", ""))
                 record["Statement"] = clean_text(sub.get("c", ""))
 
             elif line.startswith("250"):
