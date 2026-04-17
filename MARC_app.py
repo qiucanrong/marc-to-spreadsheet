@@ -36,18 +36,15 @@ def parse_marc_text(text):
     lines = text.split("\n")
 
     record = {
+        "Subjects": "",
         "Title": "",
-        "Statement": "",
         "Author": "",
         "Other Authors": "",
-        "Contributors": "",
+        "Statement": "",
         "Edition": "",
         "Publisher": "",
         "Year": "",
         "ISBN": "",
-        "Language": "",
-        "Original Language": "",
-        "Subjects": "",
     }
 
     other_authors = []
@@ -108,11 +105,6 @@ def parse_marc_text(text):
                     record["Subjects"] += "; " + subject
                 else:
                     record["Subjects"] = subject
-            
-            elif line.startswith("041"):
-                sub = extract_subfields(line)
-                record["Language"] = sub.get("a", "")
-                record["Original Language"] = sub.get("h", "")
 
         except Exception:
             continue  # skip problematic lines safely
