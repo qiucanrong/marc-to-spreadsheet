@@ -72,18 +72,24 @@ def parse_marc_text(text):
             elif line.startswith("250"):
                 sub = extract_subfields(line)
                 record["Edition"] = clean_text(sub.get("a", ""))
-
+            
             elif line.startswith("264  1"):
                 sub = extract_subfields(line)
                 record["Publisher"] = clean_text(sub.get("b", ""))
                 record["Year"] = extract_year(sub.get("c", ""))
+
+            elif line.startswith("260"):
+                sub = extract_subfields(line)
+                if "b" in sub:
+                    record["Publisher"] = clean_text(sub.get("a", "")) + " : " + clean_text(sub.get("b", ""))
+                else:
+                    record["Publisher"] = clean_text(sub.get("a", ""))
+                record["Year"] = extract_year(sub.get("c", ""))
             
             elif line.startswith("700"):
                 sub = extract_subfields(line)
-
                 name = sub.get("a", "")
                 role = sub.get("e", "")
-
                 if name:
                     if role:
                         other_authors.append(f"{clean_text(name)} ({clean_text(role)})")
@@ -92,7 +98,7 @@ def parse_marc_text(text):
 
             elif line.startswith("650"):
                 sub = extract_subfields(line)
-
+                
                 parts = []
                 if "a" in sub:
                     parts.append(sub["a"])
